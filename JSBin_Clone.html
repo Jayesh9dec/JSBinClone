@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>JSBin_Clone</title>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <style type="text/CSS">
+        body {
+            font-family: sans-serif;
+            margin: 0px;
+            padding: 0px;
+        }
+        #topbar {
+            width: 100%;
+            background-color: #EEEEEE;
+            padding: 5px;
+            height: 30px;
+        }
+        #logo {
+            float: left;
+            font-weight: bold;
+            font-size: 120%;
+            padding: 3px 5px;
+        }
+        #buttonList {
+            width: 233px;
+            margin: 0px auto;
+        }
+        .toggleButton {
+            float: left;
+            border: 1px solid grey;
+            padding: 6px;
+            border-right: none;
+            font-size: 90%;
+        }
+        #html {
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+        }
+        #output {
+            border-top-right-radius: 4px;
+            border-bottom-right-radius: 4px;
+            border-right: 1px solid grey;
+        }
+        .activeButton {
+            background-color: #E8F2FF;
+        }
+        .highlightedButton {
+            background-color: grey;
+        }
+        .panel {
+            float: left;
+            width: 50%;
+            border-left: none;
+        }
+        textarea {
+            resize: none;
+            border-top: none;
+            border-color: grey;
+        }
+        iframe {
+            border: none;
+        }
+        .hidden {
+            display: none;
+        }
+        </style>
+    </head>
+    <body>
+        <div id="topbar">
+            <div id="logo">
+                JS Bin
+            </div>
+            <div id="buttonList">
+                <div class="toggleButton activeButton" id="html">HTML</div>
+                <div class="toggleButton" id="css">CSS</div>
+                <div class="toggleButton" id="js">Javascript</div>
+                <div class="toggleButton activeButton" id="output">Output</div>
+                <!--INITIALLY THE HTML AND OUTPUT PANEL ARE ACTIVE-->
+            </div>
+        </div>
+        <div id="bodyContainer">
+            <textarea id="htmlArea" class="panel">INSERT HTML HERE</textarea>
+            <textarea id="cssArea" class="panel hidden">INSERT CSS HERE</textarea>
+            <textarea id="jsArea" class="panel hidden">alert("called from Javascript");</textarea>
+            <iframe id="outputArea" class="panel"></iframe>
+        </div>
+        <script type="text/javascript">
+            function updateOutput() {
+                $("iframe").contents().find("html").html(
+                    "<html><head><style type='text/CSS'>"+
+                    $("#cssArea").val()+"</style></head><body>"+
+                    $("#htmlArea").val()+"</body></html>"
+                );
+                //This contents function is running for iframe and find funtction will find for "html"(if you want to find
+                // division use "div") and replace the content of html with "Hello World"
+                document.getElementById("outputArea").contentWindow.eval($("#jsArea").val());
+            }
+            $(".toggleButton").hover(function() {
+                $(this).addClass("highlightedButton");
+            },
+            function() {
+                $(this).removeClass("highlightedButton");
+            });
+            ///hover function has two parameters:- 
+            //handlerIn which would be called when we hover,
+            //and handler out will do something when we remove mouse
+            $(".toggleButton").click(function() {
+                $(this).toggleClass("activeButton");
+                $(this).removeClass("highlightedButton");
+                /*We have added funtion to remove the highlighted button class because when
+                we hover our mouse to click that button, even though we click the button, as we 
+                are still hovering we dont see change, instead color is same i.e. grey here, hence after removing
+                above class, what happens is that, when we clicked button, mouse is still on hover state, after click,
+                we remove the class so that user can verify that button is clicked
+                */
+                var panelID= $(this).attr("id")+"Area"; //As the id's of button dont havve keyword "Area" in the end. we have to add
+                                                        //it because we have keyword "Area" in our text panels
+                $("#"+panelID).toggleClass("hidden");
+                var numberofactivepanels=4 - $(".hidden").length; //The length parameter will give the numbe rof times the "hidden" class is inherited
+                $(".panel").width($(window).width()/(numberofactivepanels)-10);
+             }
+            );
+            $(".panel").height($(window).height()-$("#topbar").height()-15);
+            $(".panel").width($(window).width()/2-10);
+            //10 for removing padding
+            updateOutput(); //To update some content at first when page is loaded
+            $("#htmlArea").on('change keyup paste', function() {
+                updateOutput();
+            });
+            //this "on" function, has first parameter as the triggering event. change keyup paste means that when the
+            //user pastes something or types something in the text area then that would trigger the event that is written
+            //in function which is second parameter. In that function we get the content that is written in the 
+            //html Area part and display output in this window
+        </script>
+    </body>
+</html>
