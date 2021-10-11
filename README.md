@@ -5,3 +5,5 @@ JSBin is the website where you are provided text field area for HTML,CSS and JS,
 1) Edit your HTML,CSS and Javascript code, and see the resultant output alongside panel.
 2) Click on buttons to switch between all of the code panels.
 3) Simultaneously see your output as you code.
+
+#Languages used:- html,css, javascript along with jquery.
